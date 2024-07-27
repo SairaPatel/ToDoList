@@ -1,0 +1,11 @@
+DB Name = ToDoList
+
+
+create table Tasks (
+    id int not null auto_increment,
+    description varchar(255),
+    done bit(1),
+    primary key (id)
+);
+
+
