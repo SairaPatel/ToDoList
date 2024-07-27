@@ -3,8 +3,14 @@ public class App {
 
         System.out.println(DBController.getTasks().size());
         for (Task t: DBController.getTasks()){
+            System.out.println(String.format("%s %b", t.description, t.done));
+        }
 
-            System.out.println(t.description);
+        // DBController.deleteTask(3);
+
+        System.out.println(DBController.getTasks().size());
+        for (Task t: DBController.getTasks()){
+            System.out.println(String.format("%s %b", t.description, t.done));
         }
     }
 }
