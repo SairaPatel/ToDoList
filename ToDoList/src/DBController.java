@@ -10,7 +10,7 @@ public class DBController {
 
 
     // Get array list of all tasks as Task objects
-    static public ArrayList<Task> getTasks() throws SQLException{
+    static public ArrayList<Task> getTasks(){
         String qry = "SELECT description, done FROM Tasks;";
         ArrayList<Task> tasks = new ArrayList<Task>();
 
@@ -32,7 +32,7 @@ public class DBController {
             conn.close();
         }
         catch ( SQLException e){
-            throw e;
+            tasks.add(new Task("Could not load tasks", false));
         }
 
         return tasks;
