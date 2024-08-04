@@ -76,16 +76,15 @@ public class DBController {
         }
     }
 
-    // delete a task
-    static public void deleteTask(int taskIndex) throws SQLException{
+    // delete all completed tasks
+    static public void deleteTasks() throws SQLException{
         try (
             Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            PreparedStatement st = conn.prepareStatement("DELETE FROM Tasks WHERE id = ? ;");
+            Statement st = conn.createStatement();
         )
         {
             // update task
-            st.setInt(1, getTaskIDFromIndex(taskIndex));
-            st.executeUpdate();
+            st.executeUpdate("DELETE FROM Tasks WHERE done = 1;");
         }
         catch (SQLException e){
             throw e;

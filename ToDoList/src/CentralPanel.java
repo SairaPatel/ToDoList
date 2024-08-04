@@ -1,7 +1,6 @@
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-
 import java.awt.*;
+import java.awt.event.*; 
 
 public class CentralPanel extends JFrame{
 
@@ -63,9 +62,34 @@ public class CentralPanel extends JFrame{
         clearGBC.gridwidth = 2;
         add(clearButton, clearGBC);
 
+
+        // add task button event
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                try {
+                        DBController.insertTask(taskInput.getText());
+                        System.out.println("Done");
+                        tasksPanel.addItem(new Task(taskInput.getText(), false));
+                        
+                }
+                catch (Exception ex){
+                    JOptionPane.showMessageDialog(f, "Could not add task.");
+                }
+            }
+            
+        });
+
         setSize(300,500);
         setVisible(true);
         
+    }
+
+    private void addItem(){
+        ListPanel tasksPanel = new ListPanel(DBController.getTasks());
+        GridBagConstraints listGBC = UIController.getGBC(0,1, 1, 1);
+        listGBC.fill = GridBagConstraints.BOTH;
+        listGBC.gridwidth = 2;
+        add(tasksPanel, listGBC);
     }
 
 }
