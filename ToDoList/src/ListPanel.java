@@ -1,8 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
+
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 
 public class ListPanel extends JPanel{
@@ -11,7 +12,7 @@ public class ListPanel extends JPanel{
 
     ListPanel(ArrayList<Task> tasks){
 
-       setBackground(UIController.background);
+       setBackground(UIController.midColour);
 
         // set panel layout
         GridBagLayout layout = new GridBagLayout();
@@ -28,8 +29,8 @@ public class ListPanel extends JPanel{
             // create checkbox
             JCheckBox item = new JCheckBox(tasks.get(i).description, tasks.get(i).done);
             item.setFont(UIController.getFont(12));
-            item.setBackground(UIController.midground);
-            item.setForeground(UIController.foreground);
+            item.setBackground(UIController.lightColour);
+            item.setForeground(UIController.darkColour);
 
             // position row
             gbc.gridy = i;
@@ -56,8 +57,5 @@ public class ListPanel extends JPanel{
         }
 
     }
-
-    
-    
 
 }

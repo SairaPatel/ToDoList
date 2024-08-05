@@ -2,9 +2,9 @@ import java.awt.*;
 
 public class UIController {
 
-    final static Color background = new Color(220, 220, 255);
-    final static Color midground = new Color(255, 255, 255);
-    final static Color foreground = new Color(120, 120, 220);
+    final static Color darkColour = new Color(220, 40, 80);
+    final static Color midColour = new Color(245, 245, 245);
+    final static Color lightColour = new Color(255, 255, 255);
 
    
     /**
@@ -21,7 +21,7 @@ public class UIController {
         gbc.gridy = gridy;
         gbc.ipadx = 3;
         gbc.ipady = 3;
-        gbc.insets = new Insets(2,2,2,2);
+        gbc.insets = new Insets(3,3,3,3);
         return gbc;
     }
 

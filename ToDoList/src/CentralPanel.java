@@ -1,25 +1,26 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*; 
-import java.sql.*;
+import java.sql.SQLException;
 
 public class CentralPanel extends JFrame{
 
     JFrame f;
-    ListPanel tasksPanel;
+    ScrollListPanel tasksPanel;
+    // ListPanel tasksPanel;
     GridBagConstraints tasksGBC; 
 
     CentralPanel(){
 
         // set panel layout
         setLayout(new GridBagLayout());
-        getContentPane().setBackground(UIController.background);
+        getContentPane().setBackground(UIController.midColour);
         
 
         // title
         JLabel title = new JLabel("To Do List");
         title.setFont(UIController.getFont(30));
-        title.setForeground(UIController.foreground);        
+        title.setForeground(UIController.darkColour);        
         title.setHorizontalAlignment(SwingConstants.CENTER);
 
         GridBagConstraints titleGBC = UIController.getGBC(0, 0);
@@ -29,7 +30,8 @@ public class CentralPanel extends JFrame{
         add(title, titleGBC);
 
         // list
-        tasksPanel = new ListPanel(DBController.getTasks());
+        tasksPanel = new ScrollListPanel(DBController.getTasks());
+        // tasksPanel = new ListPanel(DBController.getTasks());
         tasksGBC = UIController.getGBC(0,1, 1, 1);
         tasksGBC.fill = GridBagConstraints.BOTH;
         tasksGBC.gridwidth = 2;
@@ -45,8 +47,8 @@ public class CentralPanel extends JFrame{
         JButton addButton = new JButton("Add Item");
         addButton.setFont(UIController.getFont(12));
         addButton.setBorderPainted(false);
-        addButton.setBackground(UIController.foreground);
-        addButton.setForeground(UIController.midground);
+        addButton.setBackground(UIController.darkColour);
+        addButton.setForeground(UIController.lightColour);
 
         GridBagConstraints btnGBC = UIController.getGBC(1,2);
         btnGBC.fill = GridBagConstraints.VERTICAL;
@@ -68,12 +70,30 @@ public class CentralPanel extends JFrame{
             
         });
 
+        // enter key pressed (add task) event
+        taskInput.addKeyListener(new KeyListener() {
+            public void keyReleased(KeyEvent e){
+                if (e.getKeyCode() == KeyEvent.VK_ENTER){
+                    try {
+                        DBController.insertTask(taskInput.getText());
+                        taskInput.setText("");
+                        reloadTasksPanel();
+                    }
+                    catch (SQLException ex){
+                        JOptionPane.showMessageDialog(f, "Could not add task.");
+                    }
+                }
+            }
+            public void keyTyped(KeyEvent e){}
+            public void keyPressed(KeyEvent e){}
+        });
+
         // clear button
         JButton clearButton = new JButton("Delete Completed Items");
         clearButton.setFont(UIController.getFont(12));
         clearButton.setBorderPainted(false);
-        clearButton.setBackground(UIController.foreground);
-        clearButton.setForeground(UIController.midground);
+        clearButton.setBackground(UIController.darkColour);
+        clearButton.setForeground(UIController.lightColour);
 
         GridBagConstraints clearGBC = UIController.getGBC(0,3, 1, 0);
         clearGBC.fill = GridBagConstraints.HORIZONTAL;
@@ -102,7 +122,8 @@ public class CentralPanel extends JFrame{
 
     private void reloadTasksPanel(){
         remove(tasksPanel);
-        tasksPanel = new ListPanel(DBController.getTasks());
+        tasksPanel = new ScrollListPanel(DBController.getTasks());
+        // tasksPanel = new ListPanel(DBController.getTasks());
         add(tasksPanel, tasksGBC);
         revalidate();
     }
