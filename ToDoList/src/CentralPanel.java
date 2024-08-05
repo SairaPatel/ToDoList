@@ -1,10 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*; 
+import java.sql.*;
 
 public class CentralPanel extends JFrame{
 
     JFrame f;
+    ListPanel tasksPanel;
+    GridBagConstraints tasksGBC; 
 
     CentralPanel(){
 
@@ -26,11 +29,11 @@ public class CentralPanel extends JFrame{
         add(title, titleGBC);
 
         // list
-        ListPanel tasksPanel = new ListPanel(DBController.getTasks());
-        GridBagConstraints listGBC = UIController.getGBC(0,1, 1, 1);
-        listGBC.fill = GridBagConstraints.BOTH;
-        listGBC.gridwidth = 2;
-        add(tasksPanel, listGBC);
+        tasksPanel = new ListPanel(DBController.getTasks());
+        tasksGBC = UIController.getGBC(0,1, 1, 1);
+        tasksGBC.fill = GridBagConstraints.BOTH;
+        tasksGBC.gridwidth = 2;
+        add(tasksPanel, tasksGBC);
 
         // new task input
         JTextField taskInput = new JTextField();
@@ -38,7 +41,7 @@ public class CentralPanel extends JFrame{
         inputGBC.fill = GridBagConstraints.BOTH;
         add(taskInput, inputGBC);
 
-        // new button
+        // add new task button
         JButton addButton = new JButton("Add Item");
         addButton.setFont(UIController.getFont(12));
         addButton.setBorderPainted(false);
@@ -49,6 +52,21 @@ public class CentralPanel extends JFrame{
         btnGBC.fill = GridBagConstraints.VERTICAL;
         btnGBC.anchor = GridBagConstraints.LINE_END;
         add(addButton, btnGBC);
+
+        // add task button event
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                try {
+                        DBController.insertTask(taskInput.getText());
+                        taskInput.setText("");
+                        reloadTasksPanel();
+                }
+                catch (SQLException ex){
+                    JOptionPane.showMessageDialog(f, "Could not add task.");
+                }
+            }
+            
+        });
 
         // clear button
         JButton clearButton = new JButton("Delete Completed Items");
@@ -63,33 +81,33 @@ public class CentralPanel extends JFrame{
         add(clearButton, clearGBC);
 
 
-        // add task button event
-        addButton.addActionListener(new ActionListener() {
+        // delete completed tasks event
+        clearButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                try {
-                        DBController.insertTask(taskInput.getText());
-                        System.out.println("Done");
-                        tasksPanel.addItem(new Task(taskInput.getText(), false));
-                        
+                try{
+                    DBController.deleteTasks();
+                    reloadTasksPanel();
                 }
-                catch (Exception ex){
-                    JOptionPane.showMessageDialog(f, "Could not add task.");
+                catch (SQLException ex){
+                    JOptionPane.showMessageDialog(f, ex.toString());
                 }
             }
-            
         });
+
 
         setSize(300,500);
         setVisible(true);
         
     }
 
-    private void addItem(){
-        ListPanel tasksPanel = new ListPanel(DBController.getTasks());
-        GridBagConstraints listGBC = UIController.getGBC(0,1, 1, 1);
-        listGBC.fill = GridBagConstraints.BOTH;
-        listGBC.gridwidth = 2;
-        add(tasksPanel, listGBC);
+    private void reloadTasksPanel(){
+        remove(tasksPanel);
+        tasksPanel = new ListPanel(DBController.getTasks());
+        add(tasksPanel, tasksGBC);
+        revalidate();
     }
 
+
 }
+
+

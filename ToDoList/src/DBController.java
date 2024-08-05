@@ -70,6 +70,8 @@ public class DBController {
             st.setInt(1, done? 1 : 0 );
             st.setInt(2, getTaskIDFromIndex(taskIndex));
             st.executeUpdate();
+            st.close();
+            conn.close();
         }
         catch (SQLException e){
             throw e;
@@ -85,6 +87,8 @@ public class DBController {
         {
             // update task
             st.executeUpdate("DELETE FROM Tasks WHERE done = 1;");
+            st.close();
+            conn.close();
         }
         catch (SQLException e){
             throw e;
@@ -104,6 +108,9 @@ public class DBController {
                 rs.next();
                 id = rs.getInt("id");
             }
+
+            st.close();
+            conn.close();
 
             return id;
 
